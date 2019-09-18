@@ -56,8 +56,12 @@ export MYSQL_DATABASE=yourdbname
 export NODE_HOST=localhost
 export NODE_PORT=11898
 export NODE_BLOCKS=1000
+export NODE_TIMEOUT=12000
 npm start
 ```
+
+**Note:** environment variables can be stored in a .env and will be automatically imported.
+
 
 ## Run tests
 

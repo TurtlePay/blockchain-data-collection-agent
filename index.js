@@ -24,7 +24,8 @@ const env = {
   node: {
     host: process.env.NODE_HOST || 'localhost',
     port: process.env.NODE_PORT || 11898,
-    blocks: process.env.NODE_BLOCKS || 1000
+    blocks: process.env.NODE_BLOCKS || 1000,
+    timeout: process.env.NODE_TIMEOUT || 12000
   },
   storeRawTransactionExtra: process.env.STORE_RAW_TRANSACTION_EXTRA || false
 }
@@ -72,7 +73,7 @@ const collector = new BlockChainCollector({
   host: env.node.host,
   port: env.node.port,
   blocks: env.node.blocks,
-  timeout: 120000
+  timeout: env.node.timeout
 })
 
 if (env.enableDebugging) {
