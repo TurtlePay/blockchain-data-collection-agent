@@ -55,6 +55,7 @@ export MYSQL_PASSWORD=yourdbpassword
 export MYSQL_DATABASE=yourdbname
 export NODE_HOST=localhost
 export NODE_PORT=11898
+export NODE_BLOCKS=1000
 npm start
 ```
 

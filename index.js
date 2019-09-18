@@ -23,7 +23,8 @@ const env = {
   },
   node: {
     host: process.env.NODE_HOST || 'localhost',
-    port: process.env.NODE_PORT || 11898
+    port: process.env.NODE_PORT || 11898,
+    blocks: process.env.NODE_BLOCKS || 1000
   },
   storeRawTransactionExtra: process.env.STORE_RAW_TRANSACTION_EXTRA || false
 }
@@ -36,7 +37,7 @@ function log (message) {
 
 /* Sanity check to make sure we have connection information
    for the database and node */
-if (!env.mysql.host || !env.mysql.port || !env.mysql.username || !env.mysql.password || !env.mysql.database || !env.node.host || !env.node.port) {
+if (!env.mysql.host || !env.mysql.port || !env.mysql.username || !env.mysql.password || !env.mysql.database || !env.node.host || !env.node.port || !env.node.blocks) {
   log('It looks like you did not export all of the required connection information into your environment variables before attempting to start the service.')
   process.exit(0)
 }
@@ -70,6 +71,7 @@ const database = new DatabaseBackend({
 const collector = new BlockChainCollector({
   host: env.node.host,
   port: env.node.port,
+  blocks: env.node.blocks,
   timeout: 120000
 })
 
