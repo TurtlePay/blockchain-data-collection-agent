@@ -27,7 +27,7 @@
   "dependencies": {
     "big-integer": "^1.6.48",
     "colors": "^1.4.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "mysql": "^2.18.1",
     "node-metronome": "0.0.2",
     "turtlecoin-rpc": "^2.0.5"
