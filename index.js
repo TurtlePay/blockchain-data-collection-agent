@@ -189,8 +189,10 @@ timer.on('tick', () => {
 
         if (error.toString().indexOf('refusing to save batches of blocks') !== -1) {
           rewind()
-            .catch(error => Logger.error(error.toString()))
-            .finally(() => {
+            .then(() => { timer.pause = false })
+            .catch(error => {
+              Logger.error(error.toString())
+
               timer.pause = false
             })
         } else {
