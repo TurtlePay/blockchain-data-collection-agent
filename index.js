@@ -73,6 +73,34 @@ const collector = new BlockChainCollector({
 
 if (env.enableDebugging) collector.on('debug', message => Logger.debug('[DEBUG] %s', message))
 
+function rewind () {
+  var toHeight = 0;
+
+  return database.getLastKnownBlockHeight()
+    .then(height => {
+      toHeight = height - 10
+
+      if (toHeight < 0) {
+        toHeight = 0
+      }
+
+      Logger.info('Database contains blocks up to block #%s', height || 0)
+    })
+    .then(() => { return database.buildDeleteBlocksFromHeightQueries(toHeight) })
+    .then(queries => { return database._insertTransaction(queries) })
+    .then(results => {
+      if (results.length === 0) {
+        Logger.warning('No blocks found beyond block #%s', toHeight - 1)
+      } else {
+        Logger.warning('Executed %s queries', results.length)
+      }
+    })
+    .then(() => Logger.info('Database reound to block #%s', toHeight - 1))
+    .catch(error => {
+      Logger.error(error);
+    })
+}
+
 database.haveGenesis()
   .then(haveGenesis => {
     /* Check to see if the database has the genesis block, if it
@@ -158,10 +186,19 @@ timer.on('tick', () => {
          that's okay and we don't need to log an event */
       if (!(error instanceof BreakSignal)) {
         Logger.error(error.toString())
-      }
 
-      /* Allow our timer to fire again */
-      timer.pause = false
+        if (error.toString().indexOf('refusing to save batches of blocks') !== -1) {
+          rewind()
+            .finally(() => {
+              timer.pause = false
+            })
+        } else {
+          timer.pause = false
+        }
+      } else {
+        /* Allow our timer to fire again */
+        timer.pause = false
+      }
     })
 })
 
