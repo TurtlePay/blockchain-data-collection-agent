@@ -95,7 +95,7 @@ function rewind () {
         Logger.warning('Executed %s queries', results.length)
       }
     })
-    .then(() => Logger.info('Database reound to block #%s', toHeight - 1))
+    .then(() => Logger.info('Database rewound to block #%s', toHeight - 1))
     .catch(error => {
       Logger.error(error);
     })
@@ -189,6 +189,7 @@ timer.on('tick', () => {
 
         if (error.toString().indexOf('refusing to save batches of blocks') !== -1) {
           rewind()
+            .catch(error => Logger.error(error.toString()))
             .finally(() => {
               timer.pause = false
             })
